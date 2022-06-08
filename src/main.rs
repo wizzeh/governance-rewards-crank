@@ -1,5 +1,6 @@
 mod client;
 mod crank;
+mod instructions;
 
 use std::sync::Arc;
 use std::{env, str::FromStr};
@@ -31,8 +32,9 @@ struct Cli {
 }
 
 #[derive(Subcommand)]
-enum Command {
-    Crank {},
+pub enum Command {
+    Register,
+    Claim,
 }
 fn main() -> Result<(), anyhow::Error> {
     env_logger::init_from_env(
@@ -77,9 +79,7 @@ fn main() -> Result<(), anyhow::Error> {
     let ws_url = rpc_url.replace("https", "wss");
 
     let cluster = Cluster::Custom(rpc_url, ws_url);
-    let commitment = match command {
-        Command::Crank { .. } => CommitmentConfig::confirmed(),
-    };
+    let commitment = CommitmentConfig::confirmed();
 
     let client = Arc::new(GovernanceRewardsClient::new(
         cluster,
@@ -94,7 +94,5 @@ fn main() -> Result<(), anyhow::Error> {
         .build()
         .unwrap();
 
-    match command {
-        Command::Crank { .. } => rt.block_on(crank::runner(client)),
-    }
+    rt.block_on(crank::runner(client, command))
 }
