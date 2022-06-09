@@ -22,11 +22,11 @@ fn accounts_to_register(
         encoding: None,
     };
 
-    Ok(voter_stake_program
+    voter_stake_program
         .accounts_lazy::<Voter>(vec![rpc_filter::RpcFilterType::Memcmp(filter)])?
         .filter_map(filter_account_result)
         .map(|e| e.map(|e| e.0))
-        .collect::<Result<Vec<Pubkey>, ClientError>>()?)
+        .collect::<Result<Vec<Pubkey>, ClientError>>()
 }
 
 fn build_register<'a>(
@@ -90,8 +90,10 @@ pub async fn register(
 
     let distribution = DistributionInfo {
         address: client.distribution,
-        account: program.account::<governance_rewards::state::distribution::Distribution>(
-            client.distribution,
+        account: Failure::must_succeed(
+            program.account::<governance_rewards::state::distribution::Distribution>(
+                client.distribution,
+            ),
         )?,
     };
 

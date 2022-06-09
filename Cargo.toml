@@ -7,12 +7,15 @@ version = "0.1.0"
 
 [dependencies]
 anchor-client = {path = "../anchor-client"}
+anchor-lang = "0.24.2"
+anchor-spl = "0.24.2"
 anyhow = "1.0.57"
 clap = {version = "3.1.18", features = ["derive", "env"]}
 dotenv = "0.15.0"
 env_logger = "0.8.4"
 governance-rewards = {git = "https://github.com/wizzeh/governance-rewards.git", features = ["no-entrypoint"]}
-governance-rewards-client = {git = "https://github.com/wizzeh/governance-rewards.git"}
+governance-rewards-client = {git = "https://github.com/wizzeh/governance-rewards.git", version = "0.1.2"}
+log = "0.4.17"
 solana-sdk = "1.9.13"
 tokio = "1.14.1"
 voter-stake-registry = {git = "https://github.com/blockworks-foundation/voter-stake-registry", features = ["no-entrypoint"]}

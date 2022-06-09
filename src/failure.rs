@@ -1,4 +1,5 @@
 use anchor_client::ClientError;
+use log::{debug, error, warn};
 
 #[derive(Debug)]
 pub enum Failure<E> {
@@ -30,9 +31,18 @@ impl Failure<ClientError> {
     pub fn assess<T>(result: Result<T, ClientError>) -> Result<usize, Failure<ClientError>> {
         if let Err(err) = result {
             match Failure::from(err) {
-                Failure::Fatal(e) => Err(Failure::Fatal(e)),
-                Failure::PossibleDegradation(_) => Ok(1),
-                Failure::Skip => Ok(0),
+                Failure::Fatal(e) => {
+                    error!("Encountered fatal error: {:?}", e);
+                    Err(Failure::Fatal(e))
+                }
+                Failure::PossibleDegradation(e) => {
+                    warn!("Failed to execute noncritical instruction -- possible sign of network degradation: {:?}", e);
+                    Ok(1)
+                }
+                Failure::Skip => {
+                    debug!("Encountered nonfatal error -- skipping.");
+                    Ok(0)
+                }
             }
         } else {
             Ok(0)

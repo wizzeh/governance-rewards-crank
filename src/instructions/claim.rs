@@ -21,10 +21,10 @@ fn accounts_to_claim(
         encoding: None,
     };
 
-    Ok(program
+    program
         .accounts_lazy::<ClaimData>(vec![rpc_filter::RpcFilterType::Memcmp(filter)])?
         .filter_map(filter_account_result)
-        .collect::<Result<Vec<(Pubkey, ClaimData)>, ClientError>>()?)
+        .collect::<Result<Vec<(Pubkey, ClaimData)>, ClientError>>()
 }
 
 fn build_claim<'a>(

@@ -37,6 +37,7 @@ struct Cli {
 pub enum Command {
     Register,
     Claim,
+    ReclaimFunds,
 }
 fn main() -> Result<(), Failure<ClientError>> {
     env_logger::init_from_env(

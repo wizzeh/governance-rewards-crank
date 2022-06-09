@@ -6,7 +6,7 @@ use solana_sdk::pubkey::Pubkey;
 use crate::{
     client::GovernanceRewardsClient,
     failure::Failure,
-    instructions::{claim, register},
+    instructions::{claim, reclaim, register},
     Command,
 };
 
@@ -17,6 +17,7 @@ pub async fn runner(
     match command {
         Command::Register => register::register(client).await,
         Command::Claim => claim::claim(client).await,
+        Command::ReclaimFunds => reclaim::reclaim(client).await,
     }
 }
 

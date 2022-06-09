@@ -4,7 +4,7 @@ use anchor_client::{Client, Cluster};
 use solana_sdk::{commitment_config::CommitmentConfig, pubkey::Pubkey, signature::Keypair};
 
 pub struct GovernanceRewardsClient {
-    admin: Keypair,
+    pub admin: Keypair,
     pub payer: Rc<Keypair>,
     pub distribution: Pubkey,
     pub client: Client,

@@ -1201,7 +1201,7 @@ checksum = "78cc372d058dcf6d5ecd98510e7fbc9e5aec4d21de70f65fea8fecebcd881bd4"
 [[package]]
 name = "governance-rewards"
 version = "0.1.0"
-source = "git+https://github.com/wizzeh/governance-rewards.git#efcf13beeb33f5bc5267753804da58f9c6a4a68a"
+source = "git+https://github.com/wizzeh/governance-rewards.git#7e99aecb700a9de54b55bec93477155a8512c606"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -1214,8 +1214,8 @@ dependencies = [
 
 [[package]]
 name = "governance-rewards-client"
-version = "0.1.1"
-source = "git+https://github.com/wizzeh/governance-rewards.git#efcf13beeb33f5bc5267753804da58f9c6a4a68a"
+version = "0.1.2"
+source = "git+https://github.com/wizzeh/governance-rewards.git#7e99aecb700a9de54b55bec93477155a8512c606"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -1228,12 +1228,15 @@ name = "governance-rewards-crank"
 version = "0.1.0"
 dependencies = [
  "anchor-client",
+ "anchor-lang",
+ "anchor-spl",
  "anyhow",
  "clap 3.1.18",
  "dotenv",
  "env_logger 0.8.4",
  "governance-rewards",
  "governance-rewards-client",
+ "log",
  "solana-sdk",
  "tokio",
  "voter-stake-registry",
