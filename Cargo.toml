@@ -10,12 +10,12 @@ anchor-client = {path = "../anchor-client"}
 anyhow = "1.0.57"
 clap = {version = "3.1.18", features = ["derive", "env"]}
 dotenv = "0.15.0"
-env_logger = "0.9.0"
-governance-rewards = {git = "https://github.com/wizzeh/governance-rewards.git"}
+env_logger = "0.8.4"
+governance-rewards = {git = "https://github.com/wizzeh/governance-rewards.git", features = ["no-entrypoint"]}
 governance-rewards-client = {git = "https://github.com/wizzeh/governance-rewards.git"}
 solana-sdk = "1.9.13"
 tokio = "1.14.1"
-voter-stake-registry = {git = "https://github.com/blockworks-foundation/voter-stake-registry"}
+voter-stake-registry = {git = "https://github.com/blockworks-foundation/voter-stake-registry", features = ["no-entrypoint"]}
 
 [replace]
 "solana-account-decoder:1.9.28" = {path = "../anchor-client/override/solana-account-decoder"}

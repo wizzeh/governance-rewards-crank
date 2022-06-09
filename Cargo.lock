@@ -932,6 +932,19 @@ dependencies = [
 
 [[package]]
 name = "env_logger"
+version = "0.8.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a19187fea3ac7e84da7dacf48de0c45d63c6a76f9490dae389aead16c243fce3"
+dependencies = [
+ "atty",
+ "humantime",
+ "log",
+ "regex",
+ "termcolor",
+]
+
+[[package]]
+name = "env_logger"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b2cf0344971ee6c64c31be0d530793fba457d322dfec2810c453d0ef228f9c3"
@@ -1188,7 +1201,7 @@ checksum = "78cc372d058dcf6d5ecd98510e7fbc9e5aec4d21de70f65fea8fecebcd881bd4"
 [[package]]
 name = "governance-rewards"
 version = "0.1.0"
-source = "git+https://github.com/wizzeh/governance-rewards.git#6fcc0a92a6f156203c7505b4aa363a495634a28e"
+source = "git+https://github.com/wizzeh/governance-rewards.git#efcf13beeb33f5bc5267753804da58f9c6a4a68a"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -1202,7 +1215,7 @@ dependencies = [
 [[package]]
 name = "governance-rewards-client"
 version = "0.1.1"
-source = "git+https://github.com/wizzeh/governance-rewards.git#6fcc0a92a6f156203c7505b4aa363a495634a28e"
+source = "git+https://github.com/wizzeh/governance-rewards.git#efcf13beeb33f5bc5267753804da58f9c6a4a68a"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -1218,7 +1231,7 @@ dependencies = [
  "anyhow",
  "clap 3.1.18",
  "dotenv",
- "env_logger",
+ "env_logger 0.8.4",
  "governance-rewards",
  "governance-rewards-client",
  "solana-sdk",
@@ -2654,7 +2667,7 @@ version = "1.9.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bbd76a790f207ea9b523fb051c9d446e424e2e0b9fd539bb76c3ea797abf8ea5"
 dependencies = [
- "env_logger",
+ "env_logger 0.9.0",
  "lazy_static",
  "log",
 ]
@@ -2675,7 +2688,7 @@ version = "1.9.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2c4fd520d3360d0e8c90930da09512c5e896754c66faa05763b0ca516bf6a28c"
 dependencies = [
- "env_logger",
+ "env_logger 0.9.0",
  "gethostname",
  "lazy_static",
  "log",
@@ -3396,9 +3409,9 @@ checksum = "360dfd1d6d30e05fda32ace2c8c70e9c0a9da713275777f5a4dbb8a1893930c6"
 
 [[package]]
 name = "tracing"
-version = "0.1.34"
+version = "0.1.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d0ecdcb44a79f0fe9844f0c4f33a342cbcbb5117de8001e6ba0dc2351327d09"
+checksum = "a400e31aa60b9d44a52a8ee0343b5b18566b03a8321e0d321f695cf56e940160"
 dependencies = [
  "cfg-if",
  "pin-project-lite",
