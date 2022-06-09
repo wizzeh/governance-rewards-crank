@@ -1,15 +1,17 @@
 mod client;
 mod crank;
+mod failure;
 mod instructions;
 
 use std::sync::Arc;
 use std::{env, str::FromStr};
 
-use anchor_client::Cluster;
+use anchor_client::{ClientError, Cluster};
 
 use clap::{Parser, Subcommand};
 
 use client::GovernanceRewardsClient;
+use failure::Failure;
 use solana_sdk::{commitment_config::CommitmentConfig, pubkey::Pubkey, signer::keypair};
 
 #[derive(Parser)]
@@ -36,7 +38,7 @@ pub enum Command {
     Register,
     Claim,
 }
-fn main() -> Result<(), anyhow::Error> {
+fn main() -> Result<(), Failure<ClientError>> {
     env_logger::init_from_env(
         env_logger::Env::default().filter_or(env_logger::DEFAULT_FILTER_ENV, "info"),
     );

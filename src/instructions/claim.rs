@@ -4,14 +4,14 @@ use anchor_client::{solana_client::rpc_filter, ClientError, Program, RequestBuil
 use governance_rewards::state::{claim_data::ClaimData, preferences::UserPreferences};
 use solana_sdk::{pubkey::Pubkey, signature::Keypair, signer::Signer};
 
-use crate::{client::GovernanceRewardsClient, crank::DistributionInfo};
+use crate::{client::GovernanceRewardsClient, crank::DistributionInfo, failure::Failure};
 
 use super::filter_account_result;
 
 fn accounts_to_claim(
     client: Arc<GovernanceRewardsClient>,
     distribution: &DistributionInfo,
-) -> anyhow::Result<Vec<(Pubkey, ClaimData)>> {
+) -> anyhow::Result<Vec<(Pubkey, ClaimData)>, ClientError> {
     let program = client.client.program(governance_rewards::id());
 
     let claim_data_distribution_offset = 8 + 8;
@@ -33,9 +33,10 @@ fn build_claim<'a>(
     distribution: &DistributionInfo,
     realm: &Pubkey,
     payer: &'a Keypair,
-    preferences: &UserPreferences,
+    preferences: &Option<UserPreferences>,
     claim: &ClaimData,
 ) -> RequestBuilder<'a> {
+    let preferences = preferences.unwrap_or_default();
     let chosen_option = claim.chosen_option(&distribution.account);
     let payout_address =
         preferences
@@ -61,21 +62,25 @@ fn get_preferences(
     Ok(program.account::<UserPreferences>(UserPreferences::get_address(*user, *realm))?)
 }
 
-pub async fn claim(client: Arc<GovernanceRewardsClient>) -> anyhow::Result<()> {
+pub async fn claim(
+    client: Arc<GovernanceRewardsClient>,
+) -> anyhow::Result<(), Failure<ClientError>> {
     let program = client.client.program(governance_rewards::id());
 
     let distribution = DistributionInfo {
         address: client.distribution,
-        account: program.account::<governance_rewards::state::distribution::Distribution>(
-            client.distribution,
+        account: Failure::must_succeed(
+            program.account::<governance_rewards::state::distribution::Distribution>(
+                client.distribution,
+            ),
         )?,
     };
 
-    let users = accounts_to_claim(client.clone(), &distribution)?;
+    let users = Failure::must_succeed(accounts_to_claim(client.clone(), &distribution))?;
 
     for (user, claim) in users.iter() {
-        let preferences = get_preferences(&program, user, &distribution.account.realm)?;
-        build_claim(
+        let preferences = get_preferences(&program, user, &distribution.account.realm).ok();
+        let result = build_claim(
             program.request(),
             user,
             &distribution,
@@ -85,7 +90,9 @@ pub async fn claim(client: Arc<GovernanceRewardsClient>) -> anyhow::Result<()> {
             claim,
         )
         .signer(&client.payer as &Keypair)
-        .send()?;
+        .send();
+
+        let degradation = Failure::assess(result)?;
     }
 
     Ok(())

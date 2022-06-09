@@ -4,14 +4,14 @@ use anchor_client::{anchor_lang, solana_client::rpc_filter, ClientError, Request
 use solana_sdk::{instruction::Instruction, pubkey::Pubkey, signature::Keypair, signer::Signer};
 use voter_stake_registry::state::Voter;
 
-use crate::{client::GovernanceRewardsClient, crank::DistributionInfo};
+use crate::{client::GovernanceRewardsClient, crank::DistributionInfo, failure::Failure};
 
 use super::filter_account_result;
 
 fn accounts_to_register(
     client: Arc<GovernanceRewardsClient>,
     distribution: &DistributionInfo,
-) -> anyhow::Result<Vec<Pubkey>> {
+) -> anyhow::Result<Vec<Pubkey>, ClientError> {
     let voter_stake_program = client.client.program(voter_stake_registry::id());
 
     let registrar = distribution.account.registrar.unwrap();
@@ -83,7 +83,9 @@ fn build_register<'a>(
         .signer(payer)
 }
 
-pub async fn register(client: Arc<GovernanceRewardsClient>) -> anyhow::Result<()> {
+pub async fn register(
+    client: Arc<GovernanceRewardsClient>,
+) -> anyhow::Result<(), Failure<ClientError>> {
     let program = client.client.program(governance_rewards::id());
 
     let distribution = DistributionInfo {
@@ -93,10 +95,10 @@ pub async fn register(client: Arc<GovernanceRewardsClient>) -> anyhow::Result<()
         )?,
     };
 
-    let users = accounts_to_register(client.clone(), &distribution)?;
+    let users = Failure::must_succeed(accounts_to_register(client.clone(), &distribution))?;
 
     for user in users.iter() {
-        build_register(
+        let result = build_register(
             program.request(),
             user,
             &distribution,
@@ -104,7 +106,9 @@ pub async fn register(client: Arc<GovernanceRewardsClient>) -> anyhow::Result<()
             &client.payer,
         )
         .signer(&client.payer as &Keypair)
-        .send()?;
+        .send();
+
+        let degradation = Failure::assess(result)?;
     }
 
     Ok(())
